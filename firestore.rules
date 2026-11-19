@@ -1,0 +1,330 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model — TSV Suguan Monitoring and Reminder System
+// ===============================================================
+//
+// Access Model:
+//   Internal admin portal with no public self-registration.
+//   All non-anonymous Firebase Authentication users (Email/Password
+//   or Phone OTP, provisioned by the administrator) are authorized
+//   TSV Leads/Admins. Unauthenticated and anonymous users have
+//   zero read or write access. All unlisted paths are denied.
+//
+// Collection: schedules
+// Document ID: auto-generated scheduleId
+// Fields:
+//   - dutyDate: string (required, 1..20 chars)
+//   - dutyTime: string (required, 1..10 chars)
+//   - dutyTimestamp: timestamp (required)
+//   - serviceName: string (required, 0..120 chars)
+//   - officers: map (required, exact keys: computerOperator, videoOperator,
+//       audioOperator, headDeacon; each is a map with exact keys ['name', 'phone']:
+//         - computerOperator, headDeacon (required):
+//             name: string (1..120 chars), phone: string (10..16 chars)
+//         - videoOperator, audioOperator (optional / may be left blank):
+//             name: string (0..120 chars), phone: string (empty or 10..16 chars))
+//   - notifications: map (required, exact keys:
+//         - immediateStatus: string in ['pending', 'sent', 'partial', 'failed']
+//         - immediateSentAt: timestamp or null
+//         - reminder24hSent: bool
+//         - reminder24hStatus: string in ['pending', 'sent', 'partial', 'failed']
+//         - reminder24hSentAt: timestamp or null
+//         - reminder2hSent: bool
+//         - reminder2hStatus: string in ['pending', 'sent', 'partial', 'failed']
+//         - reminder2hSentAt: timestamp or null)
+//   - createdBy: string (required, == request.auth.uid on create, immutable on update)
+//   - createdByEmail: string (required, 0..160 chars)
+//   - createdAt: timestamp (required, immutable on update)
+//   - updatedAt: timestamp (required)
+//
+// Collection: settings
+// Document ID: config (singleton document only; no list, no delete)
+// Fields:
+//   - smsApiUrl: string (required, 0..300 chars; if non-empty must be http/https URL)
+//   - smsApiKey: string (required, 0..300 chars)
+//   - smsDeviceId: string (required, 0..120 chars)
+//   - pastorName: string (required, 0..120 chars)
+//   - pastorPhone: string (required, 0..20 chars)
+//   - updatedAt: timestamp (required)
+//   - updatedBy: string (required, == request.auth.uid on create and update)
+//
+// Collection: sms_logs
+// Document ID: auto-generated logId (append-only audit log: no update, no delete)
+// Fields:
+//   - scheduleId: string (0..128 chars) or null (required key)
+//   - dutyDate: string (0..20 chars) or null (required key)
+//   - dutyTime: string (0..10 chars) or null (required key)
+//   - recipientName: string (required, 1..120 chars)
+//   - role: string (required, 1..60 chars)
+//   - phoneNumber: string (required, 10..20 chars)
+//   - triggerType: string (required, in ['Immediate', '24h Reminder', '2h Reminder', 'Manual Resend', 'Test SMS'])
+//   - message: string (required, 1..2000 chars)
+//   - status: string (required, in ['Success', 'Failed'])
+//   - apiResponse: string (required, 0..2000 chars)
+//   - sentAt: timestamp (required)
+//   - sentBy: string (required, == request.auth.uid on create)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    // Authorized TSV Lead/Admin (provisioned Email/Password or Phone OTP account; blocks anonymous auth)
+    function isTsvAdmin() {
+      return isAuthenticated() &&
+             (!('firebase' in request.auth.token) ||
+              request.auth.token.firebase.sign_in_provider != 'anonymous');
+    }
+
+    // Check if user owns the resource by UID
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Verify a UID field matches the authenticated caller on create
+    function uidMatchesAuth(uidValue) {
+      return isAuthenticated() && uidValue is string && uidValue == request.auth.uid;
+    }
+
+    // Verify specified immutable fields are not modified on update
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // Validate exact map keys (both hasOnly and hasAll)
+    function hasExactKeys(mapData, allowedKeys) {
+      return mapData is map &&
+             mapData.keys().hasOnly(allowedKeys) &&
+             mapData.keys().hasAll(allowedKeys);
+    }
+
+    // Validate string length within inclusive bounds
+    function isStringWithLength(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    // Validate nullable string with max length
+    function isNullableString(val, maxLen) {
+      return val == null || (val is string && val.size() <= maxLen);
+    }
+
+    // Validate nullable timestamp
+    function isNullableTimestamp(val) {
+      return val == null || val is timestamp;
+    }
+
+    // Validate URL format (must start with https:// or http://)
+    function isValidUrl(url) {
+      return url is string &&
+             (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    // Validate a required officer entry inside schedules.officers
+    function isValidOfficer(officer) {
+      return hasExactKeys(officer, ['name', 'phone']) &&
+             isStringWithLength(officer.name, 1, 120) &&
+             isStringWithLength(officer.phone, 10, 16);
+    }
+
+    // Validate an optional officer entry (may be left blank by the TSV Lead)
+    function isValidOptionalOfficer(officer) {
+      return hasExactKeys(officer, ['name', 'phone']) &&
+             isStringWithLength(officer.name, 0, 120) &&
+             officer.phone is string &&
+             (officer.phone.size() == 0 ||
+              (officer.phone.size() >= 10 && officer.phone.size() <= 16));
+    }
+
+    // Validate the officers map on a schedule document
+    function isValidOfficersMap(officers) {
+      return hasExactKeys(officers, [
+               'computerOperator',
+               'videoOperator',
+               'audioOperator',
+               'headDeacon'
+             ]) &&
+             isValidOfficer(officers.computerOperator) &&
+             isValidOptionalOfficer(officers.videoOperator) &&
+             isValidOptionalOfficer(officers.audioOperator) &&
+             isValidOfficer(officers.headDeacon);
+    }
+
+    // Validate notification delivery status enum
+    function isValidNotificationStatus(status) {
+      return status is string &&
+             status in ['pending', 'sent', 'partial', 'failed'];
+    }
+
+    // Validate the notifications map on a schedule document
+    function isValidNotificationsMap(notifications) {
+      return hasExactKeys(notifications, [
+               'immediateStatus',
+               'immediateSentAt',
+               'reminder24hSent',
+               'reminder24hStatus',
+               'reminder24hSentAt',
+               'reminder2hSent',
+               'reminder2hStatus',
+               'reminder2hSentAt'
+             ]) &&
+             isValidNotificationStatus(notifications.immediateStatus) &&
+             isNullableTimestamp(notifications.immediateSentAt) &&
+             notifications.reminder24hSent is bool &&
+             isValidNotificationStatus(notifications.reminder24hStatus) &&
+             isNullableTimestamp(notifications.reminder24hSentAt) &&
+             notifications.reminder2hSent is bool &&
+             isValidNotificationStatus(notifications.reminder2hStatus) &&
+             isNullableTimestamp(notifications.reminder2hSentAt);
+    }
+
+    // Validate a complete schedules document (used on BOTH create and update)
+    function isValidSchedule(data) {
+      return hasExactKeys(data, [
+               'dutyDate',
+               'dutyTime',
+               'dutyTimestamp',
+               'serviceName',
+               'officers',
+               'notifications',
+               'createdBy',
+               'createdByEmail',
+               'createdAt',
+               'updatedAt'
+             ]) &&
+             isStringWithLength(data.dutyDate, 1, 20) &&
+             isStringWithLength(data.dutyTime, 1, 10) &&
+             data.dutyTimestamp is timestamp &&
+             isStringWithLength(data.serviceName, 0, 120) &&
+             isValidOfficersMap(data.officers) &&
+             isValidNotificationsMap(data.notifications) &&
+             isStringWithLength(data.createdBy, 1, 128) &&
+             isStringWithLength(data.createdByEmail, 0, 160) &&
+             data.createdAt is timestamp &&
+             data.updatedAt is timestamp;
+    }
+
+    // Validate the singleton settings/config document (used on BOTH create and update)
+    function isValidSettingsConfig(data) {
+      return hasExactKeys(data, [
+               'smsApiUrl',
+               'smsApiKey',
+               'smsDeviceId',
+               'pastorName',
+               'pastorPhone',
+               'updatedAt',
+               'updatedBy'
+             ]) &&
+             isStringWithLength(data.smsApiUrl, 0, 300) &&
+             (data.smsApiUrl.size() == 0 || isValidUrl(data.smsApiUrl)) &&
+             isStringWithLength(data.smsApiKey, 0, 300) &&
+             isStringWithLength(data.smsDeviceId, 0, 120) &&
+             isStringWithLength(data.pastorName, 0, 120) &&
+             isStringWithLength(data.pastorPhone, 0, 20) &&
+             data.updatedAt is timestamp &&
+             uidMatchesAuth(data.updatedBy);
+    }
+
+    // Validate an append-only sms_logs document (used on create)
+    function isValidSmsLog(data) {
+      return hasExactKeys(data, [
+               'scheduleId',
+               'dutyDate',
+               'dutyTime',
+               'recipientName',
+               'role',
+               'phoneNumber',
+               'triggerType',
+               'message',
+               'status',
+               'apiResponse',
+               'sentAt',
+               'sentBy'
+             ]) &&
+             isNullableString(data.scheduleId, 128) &&
+             isNullableString(data.dutyDate, 20) &&
+             isNullableString(data.dutyTime, 10) &&
+             isStringWithLength(data.recipientName, 1, 120) &&
+             isStringWithLength(data.role, 1, 60) &&
+             isStringWithLength(data.phoneNumber, 10, 20) &&
+             data.triggerType is string &&
+             data.triggerType in ['Immediate', '24h Reminder', '2h Reminder', 'Manual Resend', 'Test SMS'] &&
+             isStringWithLength(data.message, 1, 2000) &&
+             data.status is string &&
+             data.status in ['Success', 'Failed'] &&
+             isStringWithLength(data.apiResponse, 0, 2000) &&
+             data.sentAt is timestamp &&
+             uidMatchesAuth(data.sentBy);
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // 1. Worship Service Schedules
+    match /schedules/{scheduleId} {
+      // Authenticated TSV Leads/Admins can get and list schedules
+      allow read: if isTsvAdmin();
+
+      // Create requires valid schema and createdBy bound to caller's UID
+      allow create: if isTsvAdmin() &&
+                       isValidSchedule(request.resource.data) &&
+                       uidMatchesAuth(request.resource.data.createdBy);
+
+      // Update requires valid resulting schema (works for full edits and partial
+      // notifications/updatedAt updates) while keeping createdBy and createdAt immutable
+      allow update: if isTsvAdmin() &&
+                       isValidSchedule(request.resource.data) &&
+                       areImmutableFieldsUnchanged(['createdBy', 'createdAt']);
+
+      // Authenticated TSV Leads/Admins can delete schedules
+      allow delete: if isTsvAdmin();
+    }
+
+    // 2. Application & SMS Gateway Configuration (singleton document only)
+    match /settings/config {
+      // Only direct document get is allowed; collection listing and deletion are denied
+      allow get: if isTsvAdmin();
+      allow list: if false;
+
+      // Create and update enforce strict schema and bind updatedBy to caller's UID
+      allow create: if isTsvAdmin() && isValidSettingsConfig(request.resource.data);
+      allow update: if isTsvAdmin() && isValidSettingsConfig(request.resource.data);
+
+      allow delete: if false;
+    }
+
+    // 3. SMS Audit Logs (append-only)
+    match /sms_logs/{logId} {
+      // Authenticated TSV Leads/Admins can read and query SMS logs
+      allow read: if isTsvAdmin();
+
+      // Append-only: create must pass strict schema and bind sentBy to caller's UID
+      allow create: if isTsvAdmin() && isValidSmsLog(request.resource.data);
+
+      // Audit logs are immutable from the client
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ===============================================================
+    // Default Deny — Block all unlisted collections and subcollections
+    // ===============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
