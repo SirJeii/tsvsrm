@@ -263,7 +263,8 @@ const activeToasts = [];
 let toastIdCounter = 0;
 
 function repositionToasts() {
-  let offset = 16;
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+  let offset = isMobile ? 84 : 16;
   for (let i = activeToasts.length - 1; i >= 0; i -= 1) {
     const el = activeToasts[i];
     el.style.insetBlockEnd = `${offset}px`;

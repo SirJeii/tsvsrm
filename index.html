@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3a5f">
   <title>TSV Suguan Monitoring &amp; Reminder System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./css/styles.css">
@@ -13,18 +14,18 @@
   <div id="auth-loading" class="flex min-h-dvh items-center justify-center p-6">
     <div class="text-center">
       <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" aria-hidden="true"></div>
-      <p class="mt-3 text-sm font-medium text-slate-600">Loading TSV Suguan Monitoring System...</p>
+      <p class="mt-3 text-sm font-medium text-slate-600">Loading TSV Suguan System...</p>
     </div>
   </div>
 
   <!-- ====================================================================== -->
-  <!-- VIEW 1: AUTHENTICATION / LOGIN SCREEN                                  -->
+  <!-- VIEW 1: MOBILE-FIRST AUTHENTICATION / LOGIN SCREEN                     -->
   <!-- ====================================================================== -->
-  <main id="auth-view" class="hidden flex min-h-dvh flex-col items-center justify-center px-4 py-8">
+  <main id="auth-view" class="hidden flex min-h-dvh flex-col items-center justify-center px-4 py-6 sm:py-10">
     <div class="w-full max-w-md">
       <!-- Brand Header -->
-      <div class="mb-6 text-center">
-        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#1e3a5f] text-white shadow-sm" aria-hidden="true">
+      <div class="mb-5 text-center">
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1e3a5f] text-white shadow-sm" aria-hidden="true">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
@@ -32,18 +33,17 @@
         <h1 class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
           TSV Suguan Monitoring &amp; Reminder
         </h1>
-        <p class="mt-1 text-sm text-slate-600">Technical Support for Videostreaming &bull; Admin Portal</p>
+        <p class="mt-1 text-xs text-slate-600 sm:text-sm">Technical Support for Videostreaming &bull; Admin Portal</p>
       </div>
 
-      <!-- Firebase Setup Reminder Banner (hidden once firebaseConfig is filled in) -->
+      <!-- Firebase Setup Reminder Banner -->
       <div id="firebase-config-banner" class="hidden mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3.5 text-xs text-amber-900">
         <p class="font-semibold">Firebase Configuration Required</p>
         <p class="mt-1">Update <code class="rounded bg-amber-100 px-1 py-0.5 font-mono">js/firebase-config.js</code> with your Firebase project keys before signing in.</p>
       </div>
 
       <!-- Login Card -->
-      <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <!-- Login Method Toggle Tabs -->
+      <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div role="tablist" aria-label="Sign-in method" class="mb-5 grid grid-cols-2 rounded-xl bg-slate-100 p-1">
           <button
             id="auth-tab-email"
@@ -67,7 +67,6 @@
           </button>
         </div>
 
-        <!-- Inline Auth Alert Banner -->
         <div id="auth-alert" role="alert" class="hidden mb-4 rounded-lg border px-3.5 py-2.5 text-xs font-medium"></div>
 
         <!-- Tab Panel 1: Email & Password -->
@@ -87,7 +86,7 @@
                 aria-describedby="login-email-hint"
                 data-error="login-email-error"
                 placeholder="tsv.lead@example.com"
-                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
               <div id="login-email-error" class="error-msg">
                 <span role="img" aria-label="Error">❌</span> Enter an email address in the format you@example.com.
@@ -95,12 +94,12 @@
             </div>
 
             <div>
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between gap-2">
                 <label for="login-password" class="block text-sm font-medium text-slate-700">Password</label>
                 <button
                   type="button"
                   id="forgot-password-btn"
-                  class="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                  class="px-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
                 >
                   Forgot password?
                 </button>
@@ -115,13 +114,13 @@
                   enterkeyhint="done"
                   data-error="login-password-error"
                   placeholder="Enter your password"
-                  class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 pr-16 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 pr-16 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 >
                 <button
                   type="button"
                   id="toggle-password-btn"
                   aria-pressed="false"
-                  class="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs font-medium text-slate-600 hover:bg-slate-100"
+                  class="absolute inset-y-0 right-1.5 my-auto rounded-lg px-2.5 text-xs font-medium text-slate-600 hover:bg-slate-100"
                 >
                   Show
                 </button>
@@ -134,7 +133,7 @@
             <button
               type="submit"
               id="email-login-btn"
-              class="w-full rounded-lg bg-[#1e3a5f] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60"
+              class="w-full rounded-xl bg-[#1e3a5f] px-4 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60"
             >
               Sign In
             </button>
@@ -158,7 +157,7 @@
                 aria-describedby="login-phone-hint"
                 data-error="login-phone-error"
                 placeholder="09171234567"
-                class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
               <div id="login-phone-error" class="error-msg">
                 <span role="img" aria-label="Error">❌</span> Enter a valid Philippine mobile number (09XXXXXXXXX or +639XXXXXXXXX).
@@ -168,7 +167,7 @@
             <button
               type="submit"
               id="send-otp-btn"
-              class="w-full rounded-lg bg-[#1e3a5f] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60"
+              class="w-full rounded-xl bg-[#1e3a5f] px-4 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60"
             >
               Send Verification Code
             </button>
@@ -192,7 +191,7 @@
                 enterkeyhint="done"
                 data-error="login-otp-error"
                 placeholder="123456"
-                class="mt-1 w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-center font-mono text-lg tracking-[0.35em] text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-center font-mono text-lg tracking-[0.35em] text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
               <div id="login-otp-error" class="error-msg">
                 <span role="img" aria-label="Error">❌</span> Enter the 6-digit numeric verification code.
@@ -202,75 +201,77 @@
             <button
               type="submit"
               id="verify-otp-btn"
-              class="w-full rounded-lg bg-[#1e3a5f] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60"
+              class="w-full rounded-xl bg-[#1e3a5f] px-4 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60"
             >
               Verify &amp; Sign In
             </button>
             <button
               type="button"
               id="change-phone-btn"
-              class="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
             >
               Use a different mobile number
             </button>
           </form>
 
-          <!-- Invisible reCAPTCHA mount point for Firebase Phone Auth -->
           <div id="recaptcha-container"></div>
         </div>
       </section>
 
-      <p class="mt-5 text-center text-xs text-slate-500">
+      <p class="mt-4 text-center text-xs text-slate-500">
         Authorized TSV Leads &amp; Admins only. All SMS dispatches are logged.
       </p>
     </div>
   </main>
 
   <!-- ====================================================================== -->
-  <!-- VIEW 2: PROTECTED DASHBOARD                                            -->
+  <!-- VIEW 2: MOBILE-FIRST PROTECTED DASHBOARD                               -->
   <!-- ====================================================================== -->
   <div id="dashboard-view" class="hidden min-h-dvh flex flex-col">
-    <!-- Top Header -->
-    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <div class="flex items-center gap-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1e3a5f] text-white" aria-hidden="true">
+
+    <!-- Sticky Compact Mobile-First Top App Bar -->
+    <header class="safe-top-bar sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3.5 py-2.5 sm:px-6">
+        <div class="flex min-w-0 items-center gap-2.5">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1e3a5f] text-white" aria-hidden="true">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </div>
-          <div>
+          <div class="min-w-0">
             <h1 class="text-sm font-bold leading-tight text-slate-900 sm:text-base">
-              TSV Suguan Monitoring &amp; Reminder
+              TSV Suguan
             </h1>
-            <div class="flex items-center gap-2 text-[11px] text-slate-500">
-              <span class="inline-block h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
-              <span id="scheduler-status-text">Auto-checker initializing...</span>
+            <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1">
+                <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                <span id="scheduler-status-text">Auto-checker active</span>
+              </span>
               <button
                 type="button"
                 id="check-reminders-now-btn"
-                class="text-blue-600 hover:underline font-medium"
+                class="min-h-0 min-w-0 font-semibold text-blue-600 hover:underline"
               >
-                Check now
+                Check
               </button>
             </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <span id="current-user-identity" class="hidden text-xs font-medium text-slate-600 sm:inline-block"></span>
+        <div class="flex shrink-0 items-center gap-2">
+          <span id="current-user-identity" class="hidden text-xs font-medium text-slate-600 md:inline-block"></span>
           <button
             type="button"
             id="logout-btn"
-            class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
           >
             Sign Out
           </button>
         </div>
       </div>
 
-      <!-- Primary Navigation Tabs -->
-      <nav aria-label="Dashboard sections" class="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 sm:px-6">
+      <!-- Desktop Inline Tab Navigation (hidden on mobile; mobile uses fixed bottom bar) -->
+      <nav aria-label="Dashboard sections" class="mx-auto hidden max-w-5xl gap-1 px-6 md:flex">
         <button
           type="button"
           role="tab"
@@ -278,7 +279,16 @@
           data-tab="schedules"
           class="nav-tab whitespace-nowrap border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:text-slate-900"
         >
-          Suguan Schedules
+          Schedules
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab="encode"
+          class="nav-tab whitespace-nowrap border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:text-slate-900"
+        >
+          + Encode Suguan
         </button>
         <button
           type="button"
@@ -296,305 +306,56 @@
           data-tab="settings"
           class="nav-tab whitespace-nowrap border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:text-slate-900"
         >
-          System Settings
+          Settings
         </button>
       </nav>
     </header>
 
-    <!-- Main Dashboard Container -->
-    <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">
+    <!-- Main Mobile-First Content Area -->
+    <main class="main-mobile-pad mx-auto w-full max-w-5xl flex-1 px-3.5 pt-4 sm:px-6 sm:pt-6">
       <!-- Warning Banner when SMS API Key or Pastor Phone is missing -->
       <div
         id="settings-warning-banner"
-        class="hidden mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+        class="hidden mb-4 flex flex-col gap-2.5 rounded-2xl border border-amber-300 bg-amber-50 p-3.5 text-xs text-amber-900 sm:flex-row sm:items-center sm:justify-between sm:text-sm"
       >
         <p id="settings-warning-text" class="font-medium"></p>
         <button
           type="button"
           id="goto-settings-btn"
-          class="rounded-lg bg-amber-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-800"
+          class="shrink-0 rounded-xl bg-amber-900 px-3.5 py-2 text-xs font-semibold text-white hover:bg-amber-800"
         >
-          Open System Settings
+          Open Settings
         </button>
       </div>
 
-      <!-- Summary Stat Cards -->
-      <section aria-label="System overview" class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-          <p class="text-xs font-medium text-slate-500">Upcoming Duties</p>
-          <p id="stat-upcoming" class="mt-1 text-2xl font-bold text-[#1e3a5f]">0</p>
-        </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-          <p class="text-xs font-medium text-slate-500">Total Encoded</p>
-          <p id="stat-total-schedules" class="mt-1 text-2xl font-bold text-slate-900">0</p>
-        </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-          <p class="text-xs font-medium text-slate-500">SMS Sent Today</p>
-          <p id="stat-sms-today" class="mt-1 text-2xl font-bold text-emerald-700">0</p>
-        </div>
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-          <p class="text-xs font-medium text-slate-500">Failed SMS (Recent)</p>
-          <p id="stat-sms-failed" class="mt-1 text-2xl font-bold text-rose-700">0</p>
-        </div>
-      </section>
-
       <!-- ================================================================== -->
-      <!-- TAB PANEL 1: SUGUAN SCHEDULES                                      -->
+      <!-- TAB PANEL 1: SCHEDULES (DEFAULT MOBILE HOME SCREEN)                -->
       <!-- ================================================================== -->
-      <section id="panel-schedules" class="tab-panel grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <!-- Left Column: Encode / Edit Schedule Form -->
-        <div id="schedule-form-card" class="lg:col-span-5">
-          <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-            <div class="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
-              <div>
-                <h2 id="schedule-form-title" class="text-base font-bold text-slate-900">
-                  Encode New Suguan Schedule
-                </h2>
-                <p class="text-xs text-slate-500">
-                  Saving immediately dispatches SMS alerts to all 4 officers &amp; the Pastor.
-                </p>
-              </div>
-              <button
-                type="button"
-                id="cancel-edit-btn"
-                class="hidden rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50"
-              >
-                Cancel Edit
-              </button>
-            </div>
-
-            <form id="schedule-form" class="space-y-4">
-              <!-- Duty Date & Time -->
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="duty-date" class="block text-xs font-semibold text-slate-700">Duty Date *</label>
-                  <input
-                    type="date"
-                    id="duty-date"
-                    name="dutyDate"
-                    required
-                    data-error="duty-date-error"
-                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                  >
-                  <div id="duty-date-error" class="error-msg">
-                    <span role="img" aria-label="Error">❌</span> Please select a duty date.
-                  </div>
-                </div>
-
-                <div>
-                  <label for="duty-time" class="block text-xs font-semibold text-slate-700">Duty Time (PHT) *</label>
-                  <input
-                    type="time"
-                    id="duty-time"
-                    name="dutyTime"
-                    required
-                    data-error="duty-time-error"
-                    class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                  >
-                  <div id="duty-time-error" class="error-msg">
-                    <span role="img" aria-label="Error">❌</span> Please select a duty time.
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label for="service-name" class="block text-xs font-semibold text-slate-700">Worship Service / Event</label>
-                <input
-                  type="text"
-                  id="service-name"
-                  name="serviceName"
-                  list="service-presets"
-                  maxlength="120"
-                  placeholder="e.g., Midweek Worship Service"
-                  class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                >
-                <datalist id="service-presets">
-                  <option value="Midweek Worship Service"></option>
-                  <option value="Weekend Worship Service"></option>
-                  <option value="Special Gathering / WebEx"></option>
-                  <option value="Evangelical Mission"></option>
-                </datalist>
-              </div>
-
-              <!-- Officer Group 1: Computer Operator -->
-              <fieldset class="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-                <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
-                  1. Computer Operator
-                </legend>
-                <div class="mt-2 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  <div>
-                    <label for="comp-name" class="block text-xs font-medium text-slate-700">Full Name *</label>
-                    <input
-                      type="text"
-                      id="comp-name"
-                      required
-                      maxlength="120"
-                      autocomplete="off"
-                      data-error="comp-name-error"
-                      placeholder="Juan Dela Cruz"
-                      class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="comp-name-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Enter Computer Operator name.
-                    </div>
-                  </div>
-                  <div>
-                    <label for="comp-phone" class="block text-xs font-medium text-slate-700">Mobile Number *</label>
-                    <span id="comp-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
-                    <input
-                      type="tel"
-                      id="comp-phone"
-                      required
-                      inputmode="tel"
-                      aria-describedby="comp-phone-hint"
-                      data-error="comp-phone-error"
-                      placeholder="09171234567"
-                      class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="comp-phone-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-
-              <!-- Officer Group 2: Video Operator (Optional) -->
-              <fieldset class="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-                <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
-                  2. Video Operator <span class="font-normal normal-case text-slate-500">(Optional)</span>
-                </legend>
-                <div class="mt-2 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  <div>
-                    <label for="video-name" class="block text-xs font-medium text-slate-700">Full Name</label>
-                    <input
-                      type="text"
-                      id="video-name"
-                      maxlength="120"
-                      autocomplete="off"
-                      placeholder="Maria Santos"
-                      class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                  </div>
-                  <div>
-                    <label for="video-phone" class="block text-xs font-medium text-slate-700">Mobile Number</label>
-                    <span id="video-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
-                    <input
-                      type="tel"
-                      id="video-phone"
-                      inputmode="tel"
-                      aria-describedby="video-phone-hint"
-                      data-error="video-phone-error"
-                      placeholder="09181234567"
-                      class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="video-phone-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-
-              <!-- Officer Group 3: Audio Operator (Optional) -->
-              <fieldset class="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-                <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
-                  3. Audio Operator <span class="font-normal normal-case text-slate-500">(Optional)</span>
-                </legend>
-                <div class="mt-2 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  <div>
-                    <label for="audio-name" class="block text-xs font-medium text-slate-700">Full Name</label>
-                    <input
-                      type="text"
-                      id="audio-name"
-                      maxlength="120"
-                      autocomplete="off"
-                      placeholder="Pedro Reyes"
-                      class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                  </div>
-                  <div>
-                    <label for="audio-phone" class="block text-xs font-medium text-slate-700">Mobile Number</label>
-                    <span id="audio-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
-                    <input
-                      type="tel"
-                      id="audio-phone"
-                      inputmode="tel"
-                      aria-describedby="audio-phone-hint"
-                      data-error="audio-phone-error"
-                      placeholder="09191234567"
-                      class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="audio-phone-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-
-              <!-- Officer Group 4: Assigned Head Deacon -->
-              <fieldset class="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
-                <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
-                  4. Assigned Head Deacon (Pangulong Diakono)
-                </legend>
-                <div class="mt-2 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  <div>
-                    <label for="deacon-name" class="block text-xs font-medium text-slate-700">Full Name *</label>
-                    <input
-                      type="text"
-                      id="deacon-name"
-                      required
-                      maxlength="120"
-                      autocomplete="off"
-                      data-error="deacon-name-error"
-                      placeholder="Bro. Roberto Garcia"
-                      class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="deacon-name-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Enter Head Deacon name.
-                    </div>
-                  </div>
-                  <div>
-                    <label for="deacon-phone" class="block text-xs font-medium text-slate-700">Mobile Number *</label>
-                    <span id="deacon-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
-                    <input
-                      type="tel"
-                      id="deacon-phone"
-                      required
-                      inputmode="tel"
-                      aria-describedby="deacon-phone-hint"
-                      data-error="deacon-phone-error"
-                      placeholder="09201234567"
-                      class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                    <div id="deacon-phone-error" class="error-msg">
-                      <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-
-              <!-- Optional checkbox shown only in Edit mode -->
-              <div id="resend-on-edit-wrapper" class="hidden rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5">
-                <label class="flex items-center gap-2 text-xs font-medium text-blue-900">
-                  <input type="checkbox" id="resend-on-edit-checkbox" class="h-4 w-4 rounded border-blue-300 text-blue-600">
-                  Send updated SMS notification to all 5 recipients after saving
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                id="schedule-submit-btn"
-                class="w-full rounded-xl bg-[#1e3a5f] px-4 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60"
-              >
-                Save Schedule &amp; Send Alert
-              </button>
-            </form>
+      <section id="panel-schedules" class="tab-panel space-y-4">
+        <!-- Compact 2x2 Mobile Stat Grid (4 cols on desktop) -->
+        <div aria-label="System overview" class="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
+          <div class="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs">
+            <p class="text-[11px] font-medium text-slate-500">Upcoming</p>
+            <p id="stat-upcoming" class="mt-0.5 text-xl font-bold text-[#1e3a5f] sm:text-2xl">0</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs">
+            <p class="text-[11px] font-medium text-slate-500">Total Suguan</p>
+            <p id="stat-total-schedules" class="mt-0.5 text-xl font-bold text-slate-900 sm:text-2xl">0</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs">
+            <p class="text-[11px] font-medium text-slate-500">SMS Today</p>
+            <p id="stat-sms-today" class="mt-0.5 text-xl font-bold text-emerald-700 sm:text-2xl">0</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs">
+            <p class="text-[11px] font-medium text-slate-500">Failed SMS</p>
+            <p id="stat-sms-failed" class="mt-0.5 text-xl font-bold text-rose-700 sm:text-2xl">0</p>
           </div>
         </div>
 
-        <!-- Right Column: Real-Time Schedule List -->
-        <div class="lg:col-span-7">
-          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1 shadow-xs">
+        <!-- Mobile-First Filter Bar + Quick Encode CTA -->
+        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-2">
+            <div class="grid flex-1 grid-cols-3 rounded-xl border border-slate-200 bg-white p-1 shadow-xs sm:inline-flex sm:flex-none">
               <button
                 type="button"
                 data-filter="upcoming"
@@ -618,37 +379,297 @@
               </button>
             </div>
 
-            <div class="flex-1 sm:max-w-xs">
-              <label for="schedule-search-input" class="visually-hidden">Search schedules</label>
-              <input
-                type="search"
-                id="schedule-search-input"
-                enterkeyhint="search"
-                placeholder="Search officer, deacon, or date..."
-                class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 shadow-xs focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
-              >
-            </div>
+            <button
+              type="button"
+              id="quick-new-schedule-btn"
+              class="shrink-0 rounded-xl bg-[#1e3a5f] px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#152b47]"
+            >
+              + New
+            </button>
           </div>
 
-          <div id="schedules-list" class="space-y-3.5"></div>
+          <div class="w-full sm:max-w-xs">
+            <label for="schedule-search-input" class="visually-hidden">Search schedules</label>
+            <input
+              type="search"
+              id="schedule-search-input"
+              enterkeyhint="search"
+              placeholder="Search officer, deacon, or date..."
+              class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-base sm:text-sm text-slate-900 shadow-xs focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            >
+          </div>
+        </div>
+
+        <!-- Real-Time Schedule Cards -->
+        <div id="schedules-list" class="space-y-3"></div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- TAB PANEL 2: ENCODE / EDIT SUGUAN FORM (DEDICATED MOBILE SCREEN)   -->
+      <!-- ================================================================== -->
+      <section id="panel-encode" class="tab-panel hidden">
+        <div id="schedule-form-card" class="mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
+          <div class="mb-4 flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h2 id="schedule-form-title" class="text-base font-bold text-slate-900 sm:text-lg">
+                Encode New Suguan Schedule
+              </h2>
+              <p class="mt-0.5 text-xs text-slate-500">
+                Saving immediately dispatches SMS alerts to assigned officers &amp; the Pastor.
+              </p>
+            </div>
+            <button
+              type="button"
+              id="cancel-edit-btn"
+              class="hidden shrink-0 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <form id="schedule-form" class="space-y-4">
+            <!-- Duty Date & Time -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label for="duty-date" class="block text-xs font-semibold text-slate-700">Duty Date *</label>
+                <input
+                  type="date"
+                  id="duty-date"
+                  name="dutyDate"
+                  required
+                  data-error="duty-date-error"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                >
+                <div id="duty-date-error" class="error-msg">
+                  <span role="img" aria-label="Error">❌</span> Please select a duty date.
+                </div>
+              </div>
+
+              <div>
+                <label for="duty-time" class="block text-xs font-semibold text-slate-700">Duty Time (PHT) *</label>
+                <input
+                  type="time"
+                  id="duty-time"
+                  name="dutyTime"
+                  required
+                  data-error="duty-time-error"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                >
+                <div id="duty-time-error" class="error-msg">
+                  <span role="img" aria-label="Error">❌</span> Please select a duty time.
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="service-name" class="block text-xs font-semibold text-slate-700">Worship Service / Event</label>
+              <input
+                type="text"
+                id="service-name"
+                name="serviceName"
+                list="service-presets"
+                maxlength="120"
+                placeholder="e.g., Midweek Worship Service"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              >
+              <datalist id="service-presets">
+                <option value="Midweek Worship Service"></option>
+                <option value="Weekend Worship Service"></option>
+                <option value="Special Gathering / WebEx"></option>
+                <option value="Evangelical Mission"></option>
+              </datalist>
+            </div>
+
+            <!-- Officer Group 1: Computer Operator -->
+            <fieldset class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5">
+              <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
+                1. Computer Operator
+              </legend>
+              <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="comp-name" class="block text-xs font-medium text-slate-700">Full Name *</label>
+                  <input
+                    type="text"
+                    id="comp-name"
+                    required
+                    maxlength="120"
+                    autocomplete="off"
+                    data-error="comp-name-error"
+                    placeholder="Juan Dela Cruz"
+                    class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="comp-name-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Enter Computer Operator name.
+                  </div>
+                </div>
+                <div>
+                  <label for="comp-phone" class="block text-xs font-medium text-slate-700">Mobile Number *</label>
+                  <span id="comp-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
+                  <input
+                    type="tel"
+                    id="comp-phone"
+                    required
+                    inputmode="tel"
+                    aria-describedby="comp-phone-hint"
+                    data-error="comp-phone-error"
+                    placeholder="09171234567"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="comp-phone-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Officer Group 2: Video Operator (Optional) -->
+            <fieldset class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5">
+              <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
+                2. Video Operator <span class="font-normal normal-case text-slate-500">(Optional)</span>
+              </legend>
+              <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="video-name" class="block text-xs font-medium text-slate-700">Full Name</label>
+                  <input
+                    type="text"
+                    id="video-name"
+                    maxlength="120"
+                    autocomplete="off"
+                    placeholder="Maria Santos"
+                    class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                </div>
+                <div>
+                  <label for="video-phone" class="block text-xs font-medium text-slate-700">Mobile Number</label>
+                  <span id="video-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
+                  <input
+                    type="tel"
+                    id="video-phone"
+                    inputmode="tel"
+                    aria-describedby="video-phone-hint"
+                    data-error="video-phone-error"
+                    placeholder="09181234567"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="video-phone-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Officer Group 3: Audio Operator (Optional) -->
+            <fieldset class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5">
+              <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
+                3. Audio Operator <span class="font-normal normal-case text-slate-500">(Optional)</span>
+              </legend>
+              <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="audio-name" class="block text-xs font-medium text-slate-700">Full Name</label>
+                  <input
+                    type="text"
+                    id="audio-name"
+                    maxlength="120"
+                    autocomplete="off"
+                    placeholder="Pedro Reyes"
+                    class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                </div>
+                <div>
+                  <label for="audio-phone" class="block text-xs font-medium text-slate-700">Mobile Number</label>
+                  <span id="audio-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
+                  <input
+                    type="tel"
+                    id="audio-phone"
+                    inputmode="tel"
+                    aria-describedby="audio-phone-hint"
+                    data-error="audio-phone-error"
+                    placeholder="09191234567"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="audio-phone-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Officer Group 4: Assigned Head Deacon -->
+            <fieldset class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5">
+              <legend class="px-1.5 text-xs font-bold uppercase tracking-wide text-[#1e3a5f]">
+                4. Head Deacon (Pangulong Diakono)
+              </legend>
+              <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="deacon-name" class="block text-xs font-medium text-slate-700">Full Name *</label>
+                  <input
+                    type="text"
+                    id="deacon-name"
+                    required
+                    maxlength="120"
+                    autocomplete="off"
+                    data-error="deacon-name-error"
+                    placeholder="Bro. Roberto Garcia"
+                    class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="deacon-name-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Enter Head Deacon name.
+                  </div>
+                </div>
+                <div>
+                  <label for="deacon-phone" class="block text-xs font-medium text-slate-700">Mobile Number *</label>
+                  <span id="deacon-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
+                  <input
+                    type="tel"
+                    id="deacon-phone"
+                    required
+                    inputmode="tel"
+                    aria-describedby="deacon-phone-hint"
+                    data-error="deacon-phone-error"
+                    placeholder="09201234567"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  >
+                  <div id="deacon-phone-error" class="error-msg">
+                    <span role="img" aria-label="Error">❌</span> Invalid PH mobile number.
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Optional checkbox shown only in Edit mode -->
+            <div id="resend-on-edit-wrapper" class="hidden rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-medium text-blue-900">
+                <input type="checkbox" id="resend-on-edit-checkbox" class="h-5 w-5 rounded border-blue-300 text-blue-600">
+                Send updated SMS notification to all assigned recipients after saving
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              id="schedule-submit-btn"
+              class="w-full rounded-xl bg-[#1e3a5f] px-4 py-3.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-60"
+            >
+              Save Schedule &amp; Send Alert
+            </button>
+          </form>
         </div>
       </section>
 
       <!-- ================================================================== -->
-      <!-- TAB PANEL 2: SMS LOGS / HISTORY                                    -->
+      <!-- TAB PANEL 3: SMS LOGS / HISTORY                                    -->
       <!-- ================================================================== -->
-      <section id="panel-logs" class="tab-panel hidden space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
+      <section id="panel-logs" class="tab-panel hidden space-y-3.5">
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs space-y-3">
           <div>
             <h2 class="text-base font-bold text-slate-900">SMS Dispatch History</h2>
-            <p class="text-xs text-slate-500">Real-time audit log from Firestore <code class="font-mono">sms_logs</code> collection.</p>
+            <p class="text-xs text-slate-500">Real-time audit log from Firestore <code class="font-mono">sms_logs</code>.</p>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <label for="log-status-filter" class="visually-hidden">Filter by delivery status</label>
             <select
               id="log-status-filter"
-              class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700"
+              class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700"
             >
               <option value="all">All Statuses</option>
               <option value="Success">Success</option>
@@ -658,7 +679,7 @@
             <label for="log-trigger-filter" class="visually-hidden">Filter by trigger type</label>
             <select
               id="log-trigger-filter"
-              class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700"
+              class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700"
             >
               <option value="all">All Triggers</option>
               <option value="Immediate">Immediate</option>
@@ -674,7 +695,7 @@
               id="log-search-input"
               enterkeyhint="search"
               placeholder="Search recipient or phone..."
-              class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+              class="col-span-2 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-base sm:flex-1 sm:text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
             >
           </div>
         </div>
@@ -701,16 +722,16 @@
       </section>
 
       <!-- ================================================================== -->
-      <!-- TAB PANEL 3: SYSTEM SETTINGS                                       -->
+      <!-- TAB PANEL 4: SYSTEM SETTINGS                                       -->
       <!-- ================================================================== -->
-      <section id="panel-settings" class="tab-panel hidden grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <section id="panel-settings" class="tab-panel hidden grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6">
         <!-- Main Settings Form -->
         <div class="lg:col-span-7">
-          <form id="settings-form" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs space-y-6">
+          <form id="settings-form" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs space-y-5 sm:p-6">
             <div>
-              <h2 class="text-base font-bold text-slate-900">SMS Gateway Configuration (SabayKonekta)</h2>
+              <h2 class="text-base font-bold text-slate-900">SMS Gateway (SabayKonekta)</h2>
               <p class="mt-0.5 text-xs text-slate-500">
-                Stored securely in Firestore <code class="font-mono">settings/config</code>. Used by both the web app and Cloud Function scheduler.
+                Stored in Firestore <code class="font-mono">settings/config</code> for both web &amp; Cloud Scheduler.
               </p>
 
               <div class="mt-4 space-y-4">
@@ -724,7 +745,7 @@
                     aria-describedby="settings-api-url-hint"
                     data-error="settings-api-url-error"
                     placeholder="https://sabaykonekta.netlify.app/api/send-sms"
-                    class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm font-mono focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm font-mono focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   >
                   <div id="settings-api-url-error" class="error-msg">
                     <span role="img" aria-label="Error">❌</span> Enter a valid HTTPS URL for the SMS gateway.
@@ -741,12 +762,12 @@
                       autocomplete="off"
                       data-error="settings-api-key-error"
                       placeholder="Enter your SabayKonekta API key"
-                      class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 pr-16 text-sm font-mono focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                      class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 pr-16 text-base sm:text-sm font-mono focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     >
                     <button
                       type="button"
                       id="toggle-apikey-btn"
-                      class="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs font-medium text-slate-600 hover:bg-slate-100"
+                      class="absolute inset-y-0 right-1.5 my-auto rounded-lg px-2.5 text-xs font-medium text-slate-600 hover:bg-slate-100"
                     >
                       Show
                     </button>
@@ -758,14 +779,14 @@
 
                 <div>
                   <label for="settings-device-id" class="block text-xs font-semibold text-slate-700">Device ID / Sender ID</label>
-                  <span id="settings-device-id-hint" class="field-hint">Optional depending on your SabayKonekta gateway device setup.</span>
+                  <span id="settings-device-id-hint" class="field-hint">Optional depending on your SabayKonekta gateway setup.</span>
                   <input
                     type="text"
                     id="settings-device-id"
                     maxlength="120"
                     aria-describedby="settings-device-id-hint"
                     placeholder="e.g., TSV-GATEWAY-01"
-                    class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   >
                 </div>
               </div>
@@ -774,14 +795,14 @@
             <hr class="border-slate-200">
 
             <div>
-              <h2 class="text-base font-bold text-slate-900">Pastor / Resident Minister Details</h2>
+              <h2 class="text-base font-bold text-slate-900">Pastor / Resident Minister</h2>
               <p class="mt-0.5 text-xs text-slate-500">
-                Automatically receives copies of all Immediate, 24-Hour, and 2-Hour Suguan SMS alerts.
+                Automatically receives copies of all Immediate, 24-Hour, and 2-Hour Suguan alerts.
               </p>
 
               <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label for="settings-pastor-name" class="block text-xs font-semibold text-slate-700">Pastor / Resident Minister Name *</label>
+                  <label for="settings-pastor-name" class="block text-xs font-semibold text-slate-700">Full Name *</label>
                   <input
                     type="text"
                     id="settings-pastor-name"
@@ -790,7 +811,7 @@
                     autocomplete="name"
                     data-error="settings-pastor-name-error"
                     placeholder="Ka. Eduardo Santos"
-                    class="mt-1 w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    class="mt-1 w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   >
                   <div id="settings-pastor-name-error" class="error-msg">
                     <span role="img" aria-label="Error">❌</span> Enter the Pastor's full name.
@@ -798,8 +819,8 @@
                 </div>
 
                 <div>
-                  <label for="settings-pastor-phone" class="block text-xs font-semibold text-slate-700">Pastor's Mobile Number *</label>
-                  <span id="settings-pastor-phone-hint" class="field-hint">Format: 09XXXXXXXXX or +639XXXXXXXXX</span>
+                  <label for="settings-pastor-phone" class="block text-xs font-semibold text-slate-700">Mobile Number *</label>
+                  <span id="settings-pastor-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
                   <input
                     type="tel"
                     id="settings-pastor-phone"
@@ -808,7 +829,7 @@
                     aria-describedby="settings-pastor-phone-hint"
                     data-error="settings-pastor-phone-error"
                     placeholder="09171234567"
-                    class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   >
                   <div id="settings-pastor-phone-error" class="error-msg">
                     <span role="img" aria-label="Error">❌</span> Enter a valid Philippine mobile number.
@@ -820,7 +841,7 @@
             <button
               type="submit"
               id="save-settings-btn"
-              class="rounded-xl bg-[#1e3a5f] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60"
+              class="w-full rounded-xl bg-[#1e3a5f] px-5 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-[#152b47] disabled:opacity-60 sm:w-auto"
             >
               Save System Settings
             </button>
@@ -829,16 +850,16 @@
 
         <!-- Test SMS Card -->
         <div class="lg:col-span-5">
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-            <h2 class="text-base font-bold text-slate-900">Verify SMS Gateway Connectivity</h2>
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
+            <h2 class="text-base font-bold text-slate-900">Verify SMS Gateway</h2>
             <p class="mt-1 text-xs text-slate-500">
-              Send a live test message through <code class="font-mono">sabaykonekta.netlify.app</code> and log the API response.
+              Send a live test message through <code class="font-mono">sabaykonekta.netlify.app</code>.
             </p>
 
             <form id="test-sms-form" class="mt-4 space-y-4">
               <div>
-                <label for="test-sms-phone" class="block text-xs font-semibold text-slate-700">Test Recipient Mobile Number *</label>
-                <span id="test-sms-phone-hint" class="field-hint">Format: 09XXXXXXXXX or +639XXXXXXXXX</span>
+                <label for="test-sms-phone" class="block text-xs font-semibold text-slate-700">Test Recipient Mobile *</label>
+                <span id="test-sms-phone-hint" class="field-hint">09XXXXXXXXX or +639XXXXXXXXX</span>
                 <input
                   type="tel"
                   id="test-sms-phone"
@@ -847,7 +868,7 @@
                   aria-describedby="test-sms-phone-hint"
                   data-error="test-sms-phone-error"
                   placeholder="09171234567"
-                  class="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-base sm:text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 >
                 <div id="test-sms-phone-error" class="error-msg">
                   <span role="img" aria-label="Error">❌</span> Enter a valid Philippine mobile number.
@@ -857,7 +878,7 @@
               <button
                 type="submit"
                 id="send-test-sms-btn"
-                class="w-full rounded-xl border border-blue-600 bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+                class="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
               >
                 Send Test SMS
               </button>
@@ -868,28 +889,98 @@
         </div>
       </section>
     </main>
+
+    <!-- Fixed Mobile-First Bottom Navigation Bar (visible on mobile < md) -->
+    <nav
+      aria-label="Mobile navigation"
+      class="mobile-bottom-nav fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur md:hidden"
+    >
+      <div class="mx-auto grid max-w-md grid-cols-4 gap-1 pt-1.5">
+        <button
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-tab="schedules"
+          class="bottom-nav-tab flex flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 text-[11px] font-medium text-slate-500 transition"
+        >
+          <span class="bottom-nav-pill flex h-7 w-12 items-center justify-center rounded-full transition" aria-hidden="true">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <span>Schedules</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab="encode"
+          class="bottom-nav-tab flex flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 text-[11px] font-medium text-slate-500 transition"
+        >
+          <span class="bottom-nav-pill flex h-7 w-12 items-center justify-center rounded-full transition" aria-hidden="true">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </span>
+          <span>Encode</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab="logs"
+          class="bottom-nav-tab flex flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 text-[11px] font-medium text-slate-500 transition"
+        >
+          <span class="bottom-nav-pill flex h-7 w-12 items-center justify-center rounded-full transition" aria-hidden="true">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </span>
+          <span>SMS Logs</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-tab="settings"
+          class="bottom-nav-tab flex flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 text-[11px] font-medium text-slate-500 transition"
+        >
+          <span class="bottom-nav-pill flex h-7 w-12 items-center justify-center rounded-full transition" aria-hidden="true">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </span>
+          <span>Settings</span>
+        </button>
+      </div>
+    </nav>
   </div>
 
   <!-- ====================================================================== -->
-  <!-- NATIVE MODAL <dialog> COMPONENTS                                       -->
+  <!-- NATIVE MODAL <dialog> COMPONENTS (Bottom Sheet on Mobile)              -->
   <!-- ====================================================================== -->
 
-  <!-- 1. Destructive Delete Confirmation Modal (autofocus on safe Cancel button) -->
+  <!-- 1. Destructive Delete Confirmation Modal -->
   <dialog id="delete-dialog" aria-labelledby="delete-dialog-title">
-    <div class="p-6">
+    <div class="p-5 sm:p-6">
+      <div class="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-300 sm:hidden" aria-hidden="true"></div>
       <h2 id="delete-dialog-title" class="text-base font-bold text-slate-900">Delete Suguan Schedule?</h2>
       <p id="delete-dialog-desc" class="mt-2 text-sm text-slate-600"></p>
-      <form method="dialog" class="mt-6 flex justify-end gap-2.5">
+      <form method="dialog" class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <button
           value="cancel"
           autofocus
-          class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:w-auto"
         >
           Cancel
         </button>
         <button
           value="delete"
-          class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700"
+          class="w-full rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-rose-700 sm:w-auto"
         >
           Delete Schedule
         </button>
@@ -899,7 +990,8 @@
 
   <!-- 2. Manual Resend SMS Modal -->
   <dialog id="resend-dialog" closedby="any" aria-labelledby="resend-dialog-title">
-    <div class="p-6">
+    <div class="p-5 sm:p-6">
+      <div class="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-300 sm:hidden" aria-hidden="true"></div>
       <h2 id="resend-dialog-title" class="text-base font-bold text-slate-900">Resend SMS Notification</h2>
       <p id="resend-dialog-info" class="mt-1 text-xs text-slate-600"></p>
 
@@ -908,7 +1000,7 @@
           <label for="resend-trigger-select" class="block text-xs font-semibold text-slate-700">Message Template</label>
           <select
             id="resend-trigger-select"
-            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base sm:text-sm text-slate-900"
           >
             <option value="Manual Resend">Manual Resend / Update Notice</option>
             <option value="Immediate">Immediate Creation Alert</option>
@@ -917,21 +1009,21 @@
           </select>
         </div>
         <p class="text-xs text-slate-500">
-          This will dispatch SMS to all 4 assigned officers plus the Pastor saved in System Settings.
+          Dispatches compact 1-segment SMS to all assigned officers plus the Pastor saved in Settings.
         </p>
 
-        <div class="flex justify-end gap-2.5 pt-2">
+        <div class="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
           <button
             type="button"
             onclick="document.getElementById('resend-dialog').close()"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:w-auto"
           >
             Cancel
           </button>
           <button
             type="submit"
             id="confirm-resend-btn"
-            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+            class="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 sm:w-auto"
           >
             Send Now
           </button>
@@ -942,20 +1034,20 @@
 
   <!-- 3. SMS Log Details Modal -->
   <dialog id="log-details-dialog" closedby="any" class="dialog-wide" aria-labelledby="log-details-title">
-    <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-3.5 sm:px-6">
       <h2 id="log-details-title" class="text-base font-bold text-slate-900">SMS Dispatch Details</h2>
       <form method="dialog">
         <button
           value="close"
           autofocus
           aria-label="Close details dialog"
-          class="rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+          class="rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100"
         >
           Close
         </button>
       </form>
     </div>
-    <div class="space-y-4 overflow-y-auto p-6">
+    <div class="space-y-4 overflow-y-auto p-5 sm:p-6">
       <p id="log-detail-meta" class="text-xs font-medium text-slate-600"></p>
       <div>
         <h3 class="text-xs font-bold uppercase tracking-wide text-slate-500">Formatted SMS Message</h3>
@@ -979,4 +1071,3 @@
   <script type="module" src="./js/app.js"></script>
 </body>
 </html>
-

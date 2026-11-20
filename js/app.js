@@ -204,25 +204,34 @@ function subscribeToFirestore() {
 }
 
 // ----------------------------------------------------------------------------
-// Dashboard Navigation Tabs
+// Dashboard Navigation Tabs (Synced between Desktop Top Tabs & Mobile Bottom Bar)
 // ----------------------------------------------------------------------------
 
-function initNavigationTabs() {
-  const tabs = document.querySelectorAll('.nav-tab');
+function activateTab(tabName) {
+  const allTabs = document.querySelectorAll('[data-tab]');
   const panels = document.querySelectorAll('.tab-panel');
 
-  const activateTab = (tabName) => {
-    tabs.forEach((btn) => {
-      const isSelected = btn.dataset.tab === tabName;
-      btn.setAttribute('aria-selected', String(isSelected));
-    });
-    panels.forEach((panel) => {
-      panel.classList.toggle('hidden', panel.id !== `panel-${tabName}`);
-    });
-  };
+  allTabs.forEach((btn) => {
+    const isSelected = btn.dataset.tab === tabName;
+    btn.setAttribute('aria-selected', String(isSelected));
+  });
+  panels.forEach((panel) => {
+    panel.classList.toggle('hidden', panel.id !== `panel-${tabName}`);
+  });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
 
-  tabs.forEach((btn) => {
+function initNavigationTabs() {
+  const allTabs = document.querySelectorAll('[data-tab]');
+
+  allTabs.forEach((btn) => {
     btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+  });
+
+  // Quick "+ New" button on Schedules screen opens fresh Encode view
+  document.getElementById('quick-new-schedule-btn')?.addEventListener('click', () => {
+    resetScheduleForm();
+    activateTab('encode');
   });
 
   // Quick-jump button from config warning banner to Settings tab
@@ -308,6 +317,7 @@ function initScheduleForm() {
 
   cancelEditBtn?.addEventListener('click', () => {
     resetScheduleForm();
+    activateTab('schedules');
   });
 
   form?.addEventListener('submit', async (e) => {
@@ -415,6 +425,7 @@ function initScheduleForm() {
         }
 
         resetScheduleForm();
+        activateTab('schedules');
       } else {
         // Create new schedule
         const newDocPayload = {
@@ -460,6 +471,7 @@ function initScheduleForm() {
         );
 
         resetScheduleForm();
+        activateTab('schedules');
       }
     } catch (err) {
       console.error('Save schedule error:', err);
@@ -515,7 +527,7 @@ function startEditingSchedule(scheduleId) {
   cancelBtn?.classList.remove('hidden');
   resendWrap?.classList.remove('hidden');
 
-  document.getElementById('schedule-form-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  activateTab('encode');
 }
 
 // ----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TSV Suguan Monitoring and Reminder System — Custom Modern Styles
+   TSV Suguan Monitoring and Reminder System — Mobile-First Modern Styles
    ========================================================================== */
 
 :root {
@@ -11,6 +11,90 @@
   --color-success: #15803d;
   --color-surface: #ffffff;
   --color-bg: #f1f5f9;
+  --target-size: 24px;
+  --bottom-nav-height: 4.25rem;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --target-size: 44px;
+  }
+}
+
+html {
+  scroll-padding-top: calc(4.25rem + env(safe-area-inset-top, 0px));
+  scroll-padding-bottom: calc(var(--bottom-nav-height) + 1rem + env(safe-area-inset-bottom, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 7.5rem;
+    scroll-padding-bottom: 1.5rem;
+  }
+}
+
+body {
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p, li {
+  text-wrap: pretty;
+}
+
+img, video {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+:where(a, code) {
+  overflow-wrap: anywhere;
+}
+
+/* Touch-friendly minimum target sizing (WCAG 2.5.5 / 2.5.8) */
+:where(
+  button,
+  select,
+  textarea,
+  input:not([type="checkbox"], [type="radio"]),
+  [role="button"],
+  nav a,
+  label:has(input[type="checkbox"], input[type="radio"])
+) {
+  min-block-size: var(--target-size);
+  min-inline-size: var(--target-size);
+}
+
+:where([role="button"], nav a, label:has(input[type="checkbox"], input[type="radio"])) {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Safe-area padding for edge-to-edge mobile devices */
+.safe-top-bar {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.mobile-bottom-nav {
+  padding-bottom: max(0.375rem, env(safe-area-inset-bottom, 0px));
+  padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+  padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+}
+
+.main-mobile-pad {
+  padding-bottom: calc(var(--bottom-nav-height) + 1.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+  .main-mobile-pad {
+    padding-bottom: 2.5rem;
+  }
 }
 
 /* Accessible visually-hidden utility (keeps element in accessibility tree) */
@@ -62,7 +146,7 @@
 }
 
 /* ==========================================================================
-   Native Modal <dialog> Styling & Scroll Containment
+   Native Modal <dialog> — Mobile Bottom Sheet -> Centered Modal on Desktop
    ========================================================================== */
 
 dialog[open] {
@@ -70,18 +154,29 @@ dialog[open] {
   flex-direction: column;
   padding: 0;
   border: none;
-  border-radius: 0.875rem;
+  border-radius: 1.25rem 1.25rem 0 0;
   background: var(--color-surface);
   color: #0f172a;
-  box-shadow: 0 25px 50px -12px rgb(15 23 42 / 0.28);
-  max-width: min(92vw, 34rem);
+  box-shadow: 0 -10px 40px -10px rgb(15 23 42 / 0.3);
+  max-width: 100vw;
   width: 100%;
   max-height: 90dvh;
-  margin: auto;
+  margin: auto 0 0 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-dialog.dialog-wide[open] {
-  max-width: min(95vw, 48rem);
+@media (min-width: 640px) {
+  dialog[open] {
+    border-radius: 0.875rem;
+    box-shadow: 0 25px 50px -12px rgb(15 23 42 / 0.28);
+    max-width: min(92vw, 34rem);
+    margin: auto;
+    padding-bottom: 0;
+  }
+
+  dialog.dialog-wide[open] {
+    max-width: min(95vw, 48rem);
+  }
 }
 
 /* Mandatory: prevent scroll chaining from modal dialog or backdrop to underlying page */
@@ -202,10 +297,10 @@ dialog::backdrop {
   .sms-logs-table tbody tr {
     margin-block-end: 0.875rem;
     border: 1px solid #e2e8f0;
-    border-radius: 0.75rem;
+    border-radius: 0.875rem;
     background: #ffffff;
     overflow: hidden;
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
   }
 
   .sms-logs-table tbody th {
@@ -223,7 +318,7 @@ dialog::backdrop {
   .sms-logs-table tbody td {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.875rem;
     border-bottom: 1px solid #f1f5f9;
@@ -237,7 +332,7 @@ dialog::backdrop {
   .sms-logs-table tbody td::before {
     font-weight: 600;
     color: #64748b;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     flex-shrink: 0;
@@ -253,38 +348,51 @@ dialog::backdrop {
 }
 
 /* ==========================================================================
-   Persistent Popover Toast Notifications
+   Persistent Popover Toast Notifications (Clear of Mobile Bottom Nav)
    ========================================================================== */
 
 .toast-region {
   position: fixed;
-  inset-block-end: 1rem;
-  inset-inline-end: 1rem;
+  inset-block-end: calc(var(--bottom-nav-height) + 0.75rem + env(safe-area-inset-bottom, 0px));
+  inset-inline: 0.75rem;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 0.625rem;
-  max-width: min(24rem, calc(100vw - 2rem));
   z-index: 60;
   pointer-events: none;
 }
 
 .toast-item[popover] {
   position: fixed;
-  inset: auto 1rem 1rem auto;
-  margin: 0;
+  inset: auto 0.75rem calc(var(--bottom-nav-height) + 0.75rem + env(safe-area-inset-bottom, 0px)) 0.75rem;
+  margin: 0 auto;
   padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
   border: 1px solid #cbd5e1;
   background: #0f172a;
   color: #f8fafc;
   box-shadow: 0 12px 28px -6px rgb(15 23 42 / 0.35);
-  max-width: min(24rem, calc(100vw - 2rem));
-  width: max-content;
+  max-width: min(24rem, calc(100vw - 1.5rem));
+  width: 100%;
   pointer-events: auto;
   opacity: 0;
   transform: translateY(0.5rem);
   transition: opacity 0.2s ease, transform 0.2s ease, overlay 0.2s ease, display 0.2s ease;
   transition-behavior: allow-discrete;
+}
+
+@media (min-width: 768px) {
+  .toast-region {
+    inset-block-end: 1rem;
+    inset-inline: auto 1rem;
+  }
+
+  .toast-item[popover] {
+    inset: auto 1rem 1rem auto;
+    margin: 0;
+    width: max-content;
+  }
 }
 
 .toast-item[popover]:is(:popover-open, .\:popover-open) {
@@ -318,7 +426,7 @@ dialog::backdrop {
 }
 
 /* ==========================================================================
-   Tab Active State & Utility Polish
+   Navigation Active States (Desktop Top Tabs + Mobile Bottom Bar)
    ========================================================================== */
 
 .nav-tab[aria-selected="true"] {
@@ -327,9 +435,18 @@ dialog::backdrop {
   background-color: #eff6ff;
 }
 
+.bottom-nav-tab[aria-selected="true"] {
+  color: #1e3a5f;
+  font-weight: 700;
+}
+
+.bottom-nav-tab[aria-selected="true"] .bottom-nav-pill {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
 .auth-tab[aria-selected="true"] {
   background-color: #ffffff;
   color: #0f172a;
   box-shadow: 0 1px 3px rgb(15 23 42 / 0.1);
 }
-
